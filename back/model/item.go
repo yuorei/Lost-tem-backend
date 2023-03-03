@@ -8,7 +8,7 @@ import (
 
 type LostItem struct {
 	gorm.Model
-	KindID       uint      `json:"kindID"`
+	Kinds        string    `json:"kindID"`
 	Feature      string    `json:"feature"`
 	Comment      string    `json:"comment"`
 	ImageURL     string    `json:"imageURL"`
