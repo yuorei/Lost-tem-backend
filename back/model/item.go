@@ -18,6 +18,6 @@ type LostItem struct {
 }
 
 type Location struct {
-	lat float64 `json:"lat`
-	lng float64 `json:"lat`
+	Lat float64 `json:"lat`
+	Lng float64 `json:"lat`
 }
