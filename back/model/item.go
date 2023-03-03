@@ -22,6 +22,11 @@ type Location struct {
 	Lng float64 `json:"lng"`
 }
 
+type AreaSearchQuery struct {
+	Location1 Location `json:"location1"`
+	Location2 Location `json:"location2"`
+}
+
 type SearchResult struct {
 	Count uint `json:"count"`
 	Items []struct {
