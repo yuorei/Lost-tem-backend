@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"lost-item/database"
+	"lost-item/database/postgresd"
 	"lost-item/model"
 	"net/http"
 	"strconv"
@@ -11,13 +12,13 @@ import (
 )
 
 type Handler struct {
-	db *database.DBConn
+	db database.DBConn
 }
 
-func (h Handler) Init(url string, port uint16) {
+func (h Handler) Init() {
 	var err error
-	if h.db, err = database.NewDBConn(url, port); err != nil {
-		log.Fatalf("Database connection faild")
+	if h.db, err = postgresd.NewPostgresd(); err != nil {
+		log.Fatalf("Database connection failed")
 	}
 }
 

@@ -12,7 +12,7 @@ type Postgresd struct {
 	conn *gorm.DB
 }
 
-func NewPostgresd() (Postgresd, error) {
+func NewPostgresd() (*Postgresd, error) {
 	POSTGRES_HOST := os.Getenv("POSTGRES_HOST")
 	POSTGRES_USER := os.Getenv("POSTGRES_USER")
 	POSTGRES_PASSWORD := os.Getenv("POSTGRES_PASSWORD")
@@ -22,7 +22,7 @@ func NewPostgresd() (Postgresd, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	return Postgresd{
+	return &Postgresd{
 		conn: db,
 	}, err
 }
