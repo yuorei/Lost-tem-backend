@@ -13,7 +13,7 @@ type Association struct {
 }
 
 // DBと接続をします
-func (a Association) Open(){
+func (a *Association) Open() {
 	POSTGRES_HOST := os.Getenv("POSTGRES_HOST")
 	POSTGRES_USER := os.Getenv("POSTGRES_USER")
 	POSTGRES_PASSWORD := os.Getenv("POSTGRES_PASSWORD")
