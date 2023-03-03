@@ -8,11 +8,16 @@ import (
 
 type LostItem struct {
 	gorm.Model
-	Name      string    `json:"name"`
-	Kind      string    `json:"kind"`
-	Feature   string    `json:"feature"`
-	Comment   string    `json:"comment"`
-	ImageUrl string    `json:"image_url"`
-	// todo Locationを追加する
-	FindTime time.Time `json:"find_time"`
+	KindID       uint   `json:"kindID"`
+	Feature      string `json:"feature"`
+	Comment      string `json:"comment"`
+	ImageUrl     string `json:"imageURL"`
+	Location     Location
+	FindTime     time.Time `json:"find_time"`
+	CompleteTime time.Time `json:"completeTime`
+}
+
+type Location struct {
+	lat float64 `json:"lat`
+	lng float64 `json:"lat`
 }
