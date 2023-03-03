@@ -1,9 +1,16 @@
-FROM golang:1.19
+FROM golang:latest
 
-WORKDIR /
+ARG USERNAME=docker
+ARG GROUPNAME=docker
+ARG UID=1000
+ARG GID=1000
 
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
+RUN apt-get update &&  apt-get install -y git
+RUN go install github.com/cosmtrek/air@latest
+WORKDIR /app
 
-COPY . .
-RUN go build -v -o app
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
+USER $USERNAME
+
+CMD ["air", "-c", ".air.toml"]
