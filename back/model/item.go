@@ -12,7 +12,7 @@ type LostItem struct {
 	Kind      string    `json:"kind"`
 	Feature   string    `json:"feature"`
 	Comment   string    `json:"comment"`
-	Image_url string    `json:"image_url"`
+	ImageUrl string    `json:"image_url"`
 	// todo Locationを追加する
 	FindTime time.Time `json:"find_time"`
 }
