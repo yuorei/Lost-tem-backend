@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"lost-item/database"
+	"lost-item/database/postgresd"
 	"lost-item/model"
 	"net/http"
 	"strconv"
@@ -10,9 +11,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Search(c *gin.Context, db *database.DBConn) {
+type Handler struct {
+	db database.DBConn
+}
+
+func (h Handler) Init() {
+	var err error
+	if h.db, err = postgresd.NewPostgresd(); err != nil {
+		log.Fatalf("Database connection failed")
+	}
+}
+
+func (h Handler) Search(c *gin.Context) {
 	search_query := c.Param("q")
-	search_result, err := db.SearchItemsFor(search_query)
+	search_result, err := h.db.SearchItemsFor(search_query)
 
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
@@ -23,7 +35,7 @@ func Search(c *gin.Context, db *database.DBConn) {
 	c.JSON(http.StatusOK, search_result)
 }
 
-func ItemList(c *gin.Context, db *database.DBConn) {
+func (h Handler) ItemList(c *gin.Context) {
 	search_query := model.AreaSearchQuery{}
 	err := c.Bind(&search_query)
 
@@ -32,7 +44,7 @@ func ItemList(c *gin.Context, db *database.DBConn) {
 		return
 	}
 
-	search_result, err := db.SearchItemsArea(search_query.Location1, search_query.Location2)
+	search_result, err := h.db.SearchItemsArea(search_query.Location1, search_query.Location2)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Fatal(err)
@@ -42,7 +54,7 @@ func ItemList(c *gin.Context, db *database.DBConn) {
 	c.JSON(http.StatusOK, search_result)
 }
 
-func ItemDetail(c *gin.Context, db *database.DBConn) {
+func (h Handler) ItemDetail(c *gin.Context) {
 	item_id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
@@ -50,7 +62,7 @@ func ItemDetail(c *gin.Context, db *database.DBConn) {
 		return
 	}
 
-	item_detail, err := db.ItemDetail(uint64(item_id))
+	item_detail, err := h.db.ItemDetail(uint64(item_id))
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Fatal(err)
@@ -58,4 +70,20 @@ func ItemDetail(c *gin.Context, db *database.DBConn) {
 	}
 
 	c.JSON(http.StatusOK, item_detail)
+}
+
+func (h Handler) RegisterItem(c *gin.Context) {
+
+}
+
+func (h Handler) DeleteItem(c *gin.Context) {
+
+}
+
+func (h Handler) parse(c *gin.Context) {
+
+}
+
+func (h Handler) RegisterImage(c *gin.Context) {
+
 }
