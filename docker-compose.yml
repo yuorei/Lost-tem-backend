@@ -9,7 +9,7 @@ services:
       - "3030:3000"
     depends_on:
       - db
-    user: 1000:1000
+  # user: 1000:1000
     tty: true
     environment:
       POSTGRES_DB: lost_item
