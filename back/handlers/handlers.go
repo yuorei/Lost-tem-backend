@@ -5,13 +5,14 @@ import (
 	"lost-item/database"
 	"lost-item/model"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Search(c *gin.Context, db *database.DBConn) {
 	search_query := c.Param("q")
-	err, search_result := db.SearchItemsFor(search_query)
+	search_result, err := db.SearchItemsFor(search_query)
 
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
@@ -31,7 +32,7 @@ func ItemList(c *gin.Context, db *database.DBConn) {
 		return
 	}
 
-	err, search_result := db.SearchItemsArea(search_query.Location1, search_query.Location2)
+	search_result, err := db.SearchItemsArea(search_query.Location1, search_query.Location2)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Fatal(err)
@@ -39,4 +40,22 @@ func ItemList(c *gin.Context, db *database.DBConn) {
 	}
 
 	c.JSON(http.StatusOK, search_result)
+}
+
+func ItemDetail(c *gin.Context, db *database.DBConn) {
+	item_id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad Request")
+		return
+	}
+
+	item_detail, err := db.ItemDetail(uint64(item_id))
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Internal Server Error")
+		log.Fatal(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, item_detail)
 }
