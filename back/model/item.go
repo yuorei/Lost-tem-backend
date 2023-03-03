@@ -10,9 +10,9 @@ type LostItem struct {
 	gorm.Model
 	Name      string    `json:"name"`
 	Kind      string    `json:"kind"`
-	feature   string    `json:"feature"`
+	Feature   string    `json:"feature"`
 	Comment   string    `json:"comment"`
 	Image_url string    `json:"image_url"`
 	// todo Locationを追加する
-	find_time time.Time `json:"find_time"`
+	FindTime time.Time `json:"find_time"`
 }
