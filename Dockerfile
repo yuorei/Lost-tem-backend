@@ -11,6 +11,6 @@ WORKDIR /app
 
 RUN groupadd -g $GID $GROUPNAME && \
     useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
-USER $USERNAME
+# USER $USERNAME
 
 CMD ["air", "-c", ".air.toml"]
