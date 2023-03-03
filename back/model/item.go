@@ -8,16 +8,16 @@ import (
 
 type LostItem struct {
 	gorm.Model
-	KindID       uint   `json:"kindID"`
-	Feature      string `json:"feature"`
-	Comment      string `json:"comment"`
-	ImageUrl     string `json:"imageURL"`
-	Location     Location
+	KindID       uint      `json:"kindID"`
+	Feature      string    `json:"feature"`
+	Comment      string    `json:"comment"`
+	ImageURL     string    `json:"imageURL"`
+	Location     Location  `json:"location"`
 	FindTime     time.Time `json:"find_time"`
 	CompleteTime time.Time `json:"completeTime`
 }
 
 type Location struct {
-	Lat float64 `json:"lat`
-	Lng float64 `json:"lat`
+	Lat float64 `json:"lat"`
+	Lng float64 `json:"lng"`
 }
