@@ -9,7 +9,8 @@ import (
 )
 
 type Postgresd struct {
-	conn *gorm.DB
+	conn  *gorm.DB
+	limit uint
 }
 
 func NewPostgresd() (*Postgresd, error) {
@@ -22,8 +23,11 @@ func NewPostgresd() (*Postgresd, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
+	var limit uint = 100
+
 	return &Postgresd{
-		conn: db,
+		conn:  db,
+		limit: limit,
 	}, err
 }
 
