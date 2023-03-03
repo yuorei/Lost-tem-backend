@@ -1,6 +1,7 @@
 package postgresd
 
 import (
+	"fmt"
 	"lost-item/model"
 	"os"
 
@@ -32,7 +33,17 @@ func NewPostgresd() (*Postgresd, error) {
 }
 
 func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {
+	items := make([]model.LostItem, d.limit)
+	err := d.conn.Where("Kinds LIKE", fmt.Sprintf("%%%s%%", query)).Limit(int(d.limit)).Find(&items).Error
 
+	if err != nil {
+		return model.SearchResult{}, err
+	}
+
+	return model.SearchResult{
+		Count: uint(len(items)),
+		Items: items,
+	}, nil
 }
 
 func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom model.Location) (model.SearchResult, error) {
