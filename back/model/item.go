@@ -1,15 +1,18 @@
 package model
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type LostItem struct {
 	gorm.Model
-	Uuid        string `json:"uuid"`
-	User_id     int    `json:"user_id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Image_url   string `json:"Image_url"`
-	Deadline    string `json:"Deadline"`
+	Name      string    `json:"name"`
+	Kind      string    `json:"kind"`
+	feature   string    `json:"feature"`
+	Comment   string    `json:"comment"`
+	Image_url string    `json:"image_url"`
+	// todo Locationを追加する
+	find_time time.Time `json:"find_time"`
 }
