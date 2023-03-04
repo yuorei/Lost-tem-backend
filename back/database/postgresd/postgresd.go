@@ -1,7 +1,6 @@
 package postgresd
 
 import (
-
 	"log"
 	"lost-item/database"
 
@@ -81,11 +80,16 @@ func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return model.LostItem{
-				Model: gorm.Model{ID: 0},
+				ID: 0,
 			}, nil
 		}
 		return model.LostItem{}, err
 	}
 
 	return item, nil
+}
+
+func (d *Postgresd) CompleteItem(id uint64) error {
+	err := d.conn.Where("id = ?", id).Delete(&database.LostItem{}).Error
+	return err
 }
