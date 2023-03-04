@@ -111,3 +111,8 @@ func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
 
 	return toModelLostItem(item), nil
 }
+
+func (d *Postgresd) CompleteItem(id uint64) error {
+	err := d.conn.Where("id = ?", id).Delete(&database.LostItem{}).Error
+	return err
+}
