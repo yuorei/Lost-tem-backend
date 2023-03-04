@@ -70,6 +70,14 @@ func (h Handler) ItemDetail(c *gin.Context) {
 }
 
 func (h Handler) RegisterItem(c *gin.Context) {
+	register_item:=model.LostItem{}
+	err := c.Bind(&register_item)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad Request")
+		return
+	}
+	// TODO insert
+	c.JSON(http.StatusOK, register_item)
 
 }
 
