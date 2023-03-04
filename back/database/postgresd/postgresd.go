@@ -22,7 +22,7 @@ func toModelLostItem(item database.LostItem) model.LostItem {
 	return model.LostItem{
 		ID:       item.ID,
 		Kinds:    item.Kinds,
-		Comment:  *item.Comment,
+		Comment:  item.Comment,
 		ImageURL: item.ImageURL,
 		Location: model.Location{
 			Lat: item.Lat,
@@ -121,7 +121,7 @@ func (d *Postgresd) InsertItem(item model.LostItem) error {
 	item_db := database.LostItem{
 		Model:    gorm.Model{ID: item.ID},
 		Kinds:    item.Kinds,
-		Comment:  &item.Comment,
+		Comment:  item.Comment,
 		ImageURL: item.ImageURL,
 		Lat:      item.Location.Lat,
 		Lng:      item.Location.Lng,
