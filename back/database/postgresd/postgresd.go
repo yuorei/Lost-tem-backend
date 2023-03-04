@@ -89,7 +89,7 @@ func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
 	return item, nil
 }
 
-func (d *Postgresd) InsertItem(item model.LostItem) (database.LostItem, error) {
+func (d *Postgresd) InsertItem(item model.LostItem) error {
 	item_db := database.LostItem{
 		Model:        gorm.Model{ID: item.ID},
 		Kinds:        item.Kinds,
@@ -100,8 +100,10 @@ func (d *Postgresd) InsertItem(item model.LostItem) (database.LostItem, error) {
 		FindTime:     item.FindTime,
 		CompleteTime: nil,
 	}
+
 	if err := d.conn.Create(&item_db).Error; err != nil {
-		return item_db, err
+		return err
 	}
-	return item_db, nil
+
+	return nil
 }
