@@ -37,8 +37,16 @@ func (h *Handler) Init() {
 }
 
 func (h Handler) Search(c *gin.Context) {
-	search_query := c.Param("q")
-	search_result, err := h.db.SearchItemsFor(search_query)
+	var request struct {
+		location1 model.Location
+		location2 model.Location
+
+		query string
+		tags  []string
+	}
+
+	c.Bind(&request)
+	search_result, err := h.db.SearchItemsArea(request.location1, request.location2)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
