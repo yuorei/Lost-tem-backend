@@ -1,6 +1,7 @@
 package postgresd
 
 import (
+	"fmt"
 	"log"
 	"lost-item/model"
 	"os"
@@ -35,13 +36,13 @@ func (d *Postgresd) CreatedTable() {
 }
 
 func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {
-
+	return model.SearchResult{}, nil
 }
 
 func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom model.Location) (model.SearchResult, error) {
-
+	return model.SearchResult{}, nil
 }
 
 func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
-
+	return model.LostItem{}, nil
 }
