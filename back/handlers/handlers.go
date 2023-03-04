@@ -77,15 +77,16 @@ func (h Handler) ItemDetail(c *gin.Context) {
 
 func (h Handler) RegisterItem(c *gin.Context) {
 	var register_item model.LostItem
+	var err error
 
-	err := c.BindJSON(&register_item)
+	err = c.BindJSON(&register_item)
 	if err != nil {
 		log.Println("バインドに失敗しました")
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	err = h.db.InsertItem(register_item)
+	register_item, err = h.db.InsertItem(register_item)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
