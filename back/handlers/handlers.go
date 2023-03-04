@@ -21,7 +21,7 @@ func (h Handler) Init() {
 		log.Fatalf("Database connection failed")
 	}
 
-	h.db.CreatedTable()
+	h.db.CreateTable()
 
 }
 
