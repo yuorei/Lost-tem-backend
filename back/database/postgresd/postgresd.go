@@ -81,7 +81,7 @@ func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {
 
 func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom model.Location) (model.SearchResult, error) {
 	items := make([]database.LostItem, d.limit)
-	err := d.conn.Preload("Location").Where(
+	err := d.conn.Where(
 		"Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?",
 		left_upper.Lat, right_bottom.Lat, right_bottom.Lng, left_upper.Lng,
 	).Limit(int(d.limit)).Find(&items).Error
