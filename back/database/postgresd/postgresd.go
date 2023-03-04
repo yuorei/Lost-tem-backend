@@ -86,14 +86,14 @@ func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Locatio
 	}
 
 	items := make([]database.LostItem, d.limit)
-	db = db.Limit(int(d.limit))
+	db = db.Limit(int(d.limit)).Find(&items)
 	if db.RowsAffected == 0 {
 		return model.SearchResult{
 			Count: 0,
 			Items: []model.LostItem{},
 		}, nil
 	}
-	err := db.Find(&items).Error
+	err := db.Error
 
 	if err != nil {
 		return model.SearchResult{}, err
