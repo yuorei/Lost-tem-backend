@@ -13,7 +13,7 @@ func Router() *gin.Engine {
 	r.GET("/item_list", h.ItemList)
 	r.GET("/item", h.ItemDetail)
 	r.POST("/item", h.RegisterItem)
-	r.DELETE("/item", h.DeleteItem)
+	r.DELETE("/item/:id", h.DeleteItem)
 	r.POST("/parse", h.Search)
 	r.POST(" /image", h.RegisterImage)
 	return r

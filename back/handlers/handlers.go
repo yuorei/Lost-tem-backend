@@ -82,7 +82,15 @@ func (h Handler) RegisterItem(c *gin.Context) {
 }
 
 func (h Handler) DeleteItem(c *gin.Context) {
-
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+	// TODO delete
+	
+	delete_item, err := h.db.ItemDetail(id)
+	c.JSON(http.StatusOK, delete_item)
 }
 
 func (h Handler) parse(c *gin.Context) {
