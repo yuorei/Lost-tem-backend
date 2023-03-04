@@ -142,8 +142,8 @@ func (h Handler) Parse(c *gin.Context) {
 	}
 
 	var img_info model.ImageInfo
-	img_info.ImageName = filename
-	img_info.Tags = objects
+	img_info.ImageURL = filename
+	img_info.Kinds = objects
 
 	c.JSON(http.StatusOK, img_info)
 }
