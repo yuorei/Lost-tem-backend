@@ -2,19 +2,15 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type LostItem struct {
-	gorm.Model
-	Kinds        string    `json:"kindID"`
-	Feature      string    `json:"feature"`
-	Comment      string    `json:"comment"`
-	ImageURL     string    `json:"imageURL"`
+	ID           uint      `json:"id"`
+	Kinds        string    `json:"tags"`
+	Comment      string    `json:"note"`
+	ImageURL     string    `json:"pic"`
 	Location     Location  `json:"location"`
-	FindTime     time.Time `json:"findTime"`
-	CompleteTime time.Time `json:"completeTime"`
+	FindTime     time.Time `json:"date"`
 }
 
 type Location struct {
