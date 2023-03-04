@@ -65,24 +65,18 @@ func (d *Postgresd) CreateTable() {
 	}
 }
 
-func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {
-	items := make([]database.LostItem, d.limit)
-	err := d.conn.Where("Kinds LIKE", fmt.Sprintf("%%%s%%", query)).Limit(int(d.limit)).Find(&items).Error
-
-	if err != nil {
-		return model.SearchResult{}, err
+func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Location, query string, tags []string) (model.SearchResult, error) {
+	query_string := "Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?"
+	if query != "" {
+		query_string = fmt.Sprintf("%s AND Comment LIKE %%%s%%", query_string, query)
+	}
+	for _, tag := range tags {
+		query_string = fmt.Sprintf("%s AND Kinds LIKE %%%s%%", query_string, tag)
 	}
 
-	return model.SearchResult{
-		Count: uint(len(items)),
-		Items: mapToModelLostItem(items),
-	}, nil
-}
-
-func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom model.Location) (model.SearchResult, error) {
 	items := make([]database.LostItem, d.limit)
 	err := d.conn.Where(
-		"Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?",
+		query_string,
 		left_upper.Lat, right_bottom.Lat, right_bottom.Lng, left_upper.Lng,
 	).Limit(int(d.limit)).Find(&items).Error
 

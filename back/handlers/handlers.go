@@ -46,27 +46,8 @@ func (h Handler) Search(c *gin.Context) {
 	}
 
 	c.Bind(&request)
-	search_result, err := h.db.SearchItemsArea(request.location1, request.location2)
+	search_result, err := h.db.Search(request.location1, request.location2, request.query, request.tags)
 
-	if err != nil {
-		c.Status(http.StatusBadRequest)
-		log.Println(err)
-		return
-	}
-
-	c.JSON(http.StatusOK, search_result)
-}
-
-func (h Handler) ItemList(c *gin.Context) {
-	search_query := model.AreaSearchQuery{}
-	err := c.Bind(&search_query)
-
-	if err != nil {
-		c.Status(http.StatusBadRequest)
-		return
-	}
-
-	search_result, err := h.db.SearchItemsArea(search_query.Location1, search_query.Location2)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		log.Println(err)
