@@ -1,28 +1,39 @@
 package handlers
 
 import (
+	"context"
 	"log"
+	"lost-item/cloud/googlecloud"
 	"lost-item/database"
 	"lost-item/database/postgresd"
 	"lost-item/model"
 	"net/http"
 	"strconv"
 
+	"github.com/google/uuid"
+	imgupload "github.com/olahol/go-imageupload"
+
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	db database.DBConn
+	db    database.DBConn
+	cloud googlecloud.GCloud
 }
 
-func (h Handler) Init() {
+func (h *Handler) Init() {
 	var err error
 	if h.db, err = postgresd.NewPostgresd(); err != nil {
 		log.Fatalf("Database connection failed")
 	}
-
 	h.db.CreateTable()
 
+	ctx := context.Background()
+	x, err := googlecloud.NewGoogleCloud(ctx)
+	if err != nil {
+		log.Fatalf("Cloud initialization failure")
+	}
+	h.cloud = *x
 }
 
 func (h Handler) Search(c *gin.Context) {
@@ -73,7 +84,7 @@ func (h Handler) ItemDetail(c *gin.Context) {
 }
 
 func (h Handler) RegisterItem(c *gin.Context) {
-	register_item:=model.LostItem{}
+	register_item := model.LostItem{}
 	err := c.Bind(&register_item)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -96,10 +107,43 @@ func (h Handler) DeleteItem(c *gin.Context) {
 	c.JSON(http.StatusOK, delete_item)
 }
 
-func (h Handler) parse(c *gin.Context) {
+func (h Handler) Parse(c *gin.Context) {
+	img, err := imgupload.Process(c.Request, "file")
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
 
-}
+	uuid, err := uuid.NewRandom()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+	filename := uuid.String()
 
-func (h Handler) RegisterImage(c *gin.Context) {
+	if img.ContentType == "image/png" {
+		filename += ".png"
+	} else if img.ContentType == "image/jpeg" {
+		filename += ".jpg"
+	} else {
+		c.Status(http.StatusBadRequest)
+		return
+	}
 
+	if err := h.cloud.UploadImage(img.Data, filename); err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	objects, err := h.cloud.ObjectRecognition(filename)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	var img_info model.ImageInfo
+	img_info.ImageName = filename
+	img_info.Tags = objects
+
+	c.JSON(http.StatusOK, img_info)
 }

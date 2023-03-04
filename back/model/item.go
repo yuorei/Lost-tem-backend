@@ -28,10 +28,6 @@ type AreaSearchQuery struct {
 }
 
 type SearchResult struct {
-	Count uint `json:"count"`
-	Items []struct {
-		Id  uint    `json:"id"`
-		Lat float64 `json:"lat"`
-		Lng float64 `json:"Lng"`
-	} `json:"items"`
+	Count uint       `json:"count"`
+	Items []LostItem `json:"items"`
 }
