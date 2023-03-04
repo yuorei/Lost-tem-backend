@@ -50,6 +50,7 @@ func (h Handler) Search(c *gin.Context) {
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 
@@ -68,6 +69,7 @@ func (h Handler) ItemList(c *gin.Context) {
 	search_result, err := h.db.SearchItemsArea(search_query.Location1, search_query.Location2)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 
@@ -85,6 +87,7 @@ func (h Handler) ItemDetail(c *gin.Context) {
 	item_detail, err := h.db.ItemDetail(uint64(item_id))
 	if err != nil {
 		c.Status(http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 
