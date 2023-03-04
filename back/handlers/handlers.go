@@ -38,15 +38,19 @@ func (h *Handler) Init() {
 
 func (h Handler) Search(c *gin.Context) {
 	var request struct {
-		location1 model.Location
-		location2 model.Location
+		Location1 model.Location `json:"location1"`
+		Location2 model.Location `json:"location2"`
 
-		query string
-		tags  []string
+		Query string   `json:"query"`
+		Tags  []string `json:"tags"`
 	}
 
-	c.Bind(&request)
-	search_result, err := h.db.Search(request.location1, request.location2, request.query, request.tags)
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Println("うまくバインドできませんでした")
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	search_result, err := h.db.Search(request.Location1, request.Location2, request.Query, request.Tags)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
