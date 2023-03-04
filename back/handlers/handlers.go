@@ -37,8 +37,16 @@ func (h *Handler) Init() {
 }
 
 func (h Handler) Search(c *gin.Context) {
-	search_query := c.Param("q")
-	search_result, err := h.db.SearchItemsFor(search_query)
+	var request struct {
+		location1 model.Location
+		location2 model.Location
+
+		query string
+		tags  []string
+	}
+
+	c.Bind(&request)
+	search_result, err := h.db.SearchItemsArea(request.location1, request.location2)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -149,8 +157,8 @@ func (h Handler) Parse(c *gin.Context) {
 	}
 
 	var img_info model.ImageInfo
-	img_info.ImageName = filename
-	img_info.Tags = objects
+	img_info.ImageURL = filename
+	img_info.Kinds = objects
 
 	c.JSON(http.StatusOK, img_info)
 }

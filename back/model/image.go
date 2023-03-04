@@ -1,6 +1,6 @@
 package model
 
 type ImageInfo struct {
-	ImageName string   `json:"image_name"`
-	Tags      []string `json:"tags"`
+	ImageURL string   `json:"pic"`
+	Kinds    []string `json:"tags"`
 }
