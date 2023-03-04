@@ -112,7 +112,7 @@ func (d *Postgresd) CompleteItem(id uint64) error {
 	return err
 }
 
-func (d *Postgresd) InsertItem(item model.LostItem) error {
+func (d *Postgresd) InsertItem(item model.LostItem) (model.LostItem, error) {
 	item_db := database.LostItem{
 		Model:    gorm.Model{ID: item.ID},
 		Kinds:    strings.Join(item.Kinds, ","),
@@ -124,8 +124,8 @@ func (d *Postgresd) InsertItem(item model.LostItem) error {
 	}
 
 	if err := d.conn.Create(&item_db).Error; err != nil {
-		return err
+		return item, err
 	}
-
-	return nil
+	item.ID = item_db.ID
+	return item, nil
 }
