@@ -2,6 +2,7 @@ package postgresd
 
 import (
 	"log"
+	"lost-item/database"
 	"lost-item/model"
 	"os"
 
@@ -29,7 +30,7 @@ func NewPostgresd() (*Postgresd, error) {
 }
 
 func (d *Postgresd) CreatedTable() {
-	if err := d.conn.AutoMigrate(&model.LostItem{}); err != nil {
+	if err := d.conn.AutoMigrate(&database.LostItem{}); err != nil {
 		log.Fatalf("Database create table failed")
 	}
 }
