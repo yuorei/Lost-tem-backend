@@ -26,6 +26,8 @@ func (h *Handler) Init() {
 	if h.db, err = postgresd.NewPostgresd(); err != nil {
 		log.Fatalf("Database connection failed")
 	}
+	h.db.CreateTable()
+
 	ctx := context.Background()
 	x, err := googlecloud.NewGoogleCloud(ctx)
 	if err != nil {
@@ -82,7 +84,7 @@ func (h Handler) ItemDetail(c *gin.Context) {
 }
 
 func (h Handler) RegisterItem(c *gin.Context) {
-	register_item:=model.LostItem{}
+	register_item := model.LostItem{}
 	err := c.Bind(&register_item)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
