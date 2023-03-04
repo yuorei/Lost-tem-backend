@@ -15,6 +15,5 @@ func Router() *gin.Engine {
 	r.POST("/item", h.RegisterItem)
 	r.DELETE("/item/:id", h.DeleteItem)
 	r.POST("/parse", h.Parse)
-	r.POST(" /image", h.RegisterImage)
 	return r
 }
