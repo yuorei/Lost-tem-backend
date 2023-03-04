@@ -109,9 +109,9 @@ func (h Handler) DeleteItem(c *gin.Context) {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	// TODO delete
+	h.db.CompleteItem(id)
 
-	delete_item, err := h.db.ItemDetail(id)
+	delete_item, _ := h.db.ItemDetail(id)
 	c.JSON(http.StatusOK, delete_item)
 }
 
