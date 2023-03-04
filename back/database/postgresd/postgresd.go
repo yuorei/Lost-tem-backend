@@ -1,7 +1,6 @@
 package postgresd
 
 import (
-
 	"log"
 	"lost-item/database"
 
@@ -88,4 +87,21 @@ func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
 	}
 
 	return item, nil
+}
+
+func (d *Postgresd) InsertItem(item model.LostItem) (database.LostItem, error) {
+	item_db := database.LostItem{
+		Model:        gorm.Model{ID: item.ID},
+		Kinds:        item.Kinds,
+		Comment:      &item.Comment,
+		ImageURL:     item.ImageURL,
+		Lat:          item.Location.Lat,
+		Lng:          item.Location.Lng,
+		FindTime:     item.FindTime,
+		CompleteTime: nil,
+	}
+	if err := d.conn.Create(&item_db).Error; err != nil {
+		return item_db, err
+	}
+	return item_db, nil
 }
