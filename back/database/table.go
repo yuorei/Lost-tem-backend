@@ -10,7 +10,7 @@ type LostItem struct {
 	gorm.Model
 	Kinds        string
 	Feature      string
-	Comment      string
+	Comment      *string
 	ImageURL     string
 	Lat          float64
 	Lng          float64

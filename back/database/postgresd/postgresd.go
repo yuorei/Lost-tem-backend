@@ -29,7 +29,7 @@ func NewPostgresd() (*Postgresd, error) {
 	}, err
 }
 
-func (d *Postgresd) CreatedTable() {
+func (d *Postgresd) CreateTable() {
 	if err := d.conn.AutoMigrate(&database.LostItem{}); err != nil {
 		log.Fatalf("Database create table failed")
 	}
