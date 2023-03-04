@@ -1,7 +1,6 @@
 package postgresd
 
 import (
-
 	"log"
 	"lost-item/database"
 
@@ -75,17 +74,27 @@ func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom mode
 }
 
 func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
-	item := model.LostItem{}
+	item := database.LostItem{}
 	err := d.conn.Where("id = ?", id).First(&item).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return model.LostItem{
-				Model: gorm.Model{ID: 0},
+				ID: 0,
 			}, nil
 		}
 		return model.LostItem{}, err
 	}
 
-	return item, nil
+	return model.LostItem{
+		ID:       item.ID,
+		Kinds:    item.Kinds,
+		Comment:  *item.Comment,
+		ImageURL: item.ImageURL,
+		Location: model.Location{
+			Lat: item.Lat,
+			Lng: item.Lng,
+		},
+		FindTime: item.FindTime,
+	}, nil
 }
