@@ -53,11 +53,13 @@ func (gc GCloud) ObjectRecognition(filename string) ([]string, error) {
 	obj := []string{}
 
 	for _, o := range objects {
-		fmt.Print(o.Name + ":")
-		fmt.Println(o.Score)
 		obj = append(obj, o.Name)
 	}
 	return obj, nil
+}
+
+func (gc GCloud) GetURL(filename string) (string, error) {
+	return fmt.Sprintf("https://storage.googleapis.com/lost-item/%s", filename), nil
 }
 
 func (gc GCloud) Close() {

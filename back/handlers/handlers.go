@@ -160,7 +160,11 @@ func (h Handler) Parse(c *gin.Context) {
 	}
 
 	var img_info model.ImageInfo
-	img_info.ImageURL = filename
+	if img_info.ImageURL, err = h.cloud.GetURL(filename); err != nil {
+		log.Println("URLを取得できませんでした")
+		c.Status(http.StatusInternalServerError)
+		return
+	}
 	img_info.Kinds = objects
 
 	c.JSON(http.StatusOK, img_info)
