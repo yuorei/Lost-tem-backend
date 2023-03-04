@@ -27,7 +27,7 @@ func (h Handler) Search(c *gin.Context) {
 	search_result, err := h.db.SearchItemsFor(search_query)
 
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Internal Server Error")
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
@@ -39,13 +39,13 @@ func (h Handler) ItemList(c *gin.Context) {
 	err := c.Bind(&search_query)
 
 	if err != nil {
-		c.String(http.StatusBadRequest, "Bad Request")
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
 	search_result, err := h.db.SearchItemsArea(search_query.Location1, search_query.Location2)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Internal Server Error")
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
@@ -62,7 +62,7 @@ func (h Handler) ItemDetail(c *gin.Context) {
 
 	item_detail, err := h.db.ItemDetail(uint64(item_id))
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Internal Server Error")
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
@@ -73,7 +73,7 @@ func (h Handler) RegisterItem(c *gin.Context) {
 	register_item:=model.LostItem{}
 	err := c.Bind(&register_item)
 	if err != nil {
-		c.String(http.StatusBadRequest, "Bad Request")
+		c.Status(http.StatusBadRequest)
 		return
 	}
 	// TODO insert
@@ -84,11 +84,11 @@ func (h Handler) RegisterItem(c *gin.Context) {
 func (h Handler) DeleteItem(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Internal Server Error")
+		c.Status(http.StatusBadRequest)
 		return
 	}
 	// TODO delete
-	
+
 	delete_item, err := h.db.ItemDetail(id)
 	c.JSON(http.StatusOK, delete_item)
 }
