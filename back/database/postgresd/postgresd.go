@@ -22,7 +22,7 @@ func toModelLostItem(item database.LostItem) model.LostItem {
 	return model.LostItem{
 		ID:       item.ID,
 		Kinds:    item.Kinds,
-		Comment:  *item.Comment,
+		Comment:  item.Comment,
 		ImageURL: item.ImageURL,
 		Location: model.Location{
 			Lat: item.Lat,
@@ -109,4 +109,22 @@ func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
 func (d *Postgresd) CompleteItem(id uint64) error {
 	err := d.conn.Where("id = ?", id).Delete(&database.LostItem{}).Error
 	return err
+}
+
+func (d *Postgresd) InsertItem(item model.LostItem) error {
+	item_db := database.LostItem{
+		Model:    gorm.Model{ID: item.ID},
+		Kinds:    item.Kinds,
+		Comment:  item.Comment,
+		ImageURL: item.ImageURL,
+		Lat:      item.Location.Lat,
+		Lng:      item.Location.Lng,
+		FindTime: item.FindTime,
+	}
+
+	if err := d.conn.Create(&item_db).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

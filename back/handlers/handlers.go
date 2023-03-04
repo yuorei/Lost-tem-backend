@@ -76,13 +76,20 @@ func (h Handler) ItemDetail(c *gin.Context) {
 }
 
 func (h Handler) RegisterItem(c *gin.Context) {
-	register_item := model.LostItem{}
+	var register_item model.LostItem
+
 	err := c.Bind(&register_item)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	// TODO insert
+
+	err = h.db.InsertItem(register_item)
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
 	c.JSON(http.StatusOK, register_item)
 
 }
@@ -134,7 +141,11 @@ func (h Handler) Parse(c *gin.Context) {
 	}
 
 	var img_info model.ImageInfo
-	img_info.ImageURL = filename
+	if img_info.ImageURL, err = h.cloud.GetURL(filename); err != nil {
+		log.Println("URLを取得できませんでした")
+		c.Status(http.StatusInternalServerError)
+		return
+	}
 	img_info.Kinds = objects
 
 	c.JSON(http.StatusOK, img_info)

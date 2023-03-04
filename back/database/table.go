@@ -8,10 +8,10 @@ import (
 
 type LostItem struct {
 	gorm.Model
-	Kinds    string
-	Comment  *string
-	ImageURL string
-	Lat      float64
-	Lng      float64
-	FindTime time.Time
+	Kinds    string    `gorm:"not null"`
+	Comment  string    `gorm:"not null"`
+	ImageURL string    `gorm:"not null"`
+	Lat      float64   `gorm:"not null"`
+	Lng      float64   `gorm:"not null"`
+	FindTime time.Time `gorm:"not null"`
 }

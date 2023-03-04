@@ -10,7 +10,7 @@ func Router() *gin.Engine {
 	r := gin.Default()
 	h := handlers.Handler{}
 	h.Init()
-	r.GET("/serch", h.Search)
+	r.GET("/search", h.Search)
 	r.GET("/item", h.ItemDetail)
 	r.POST("/item", h.RegisterItem)
 	r.DELETE("/item/:id", h.DeleteItem)
