@@ -1,6 +1,7 @@
 package postgresd
 
 import (
+	"log"
 	"lost-item/model"
 	"os"
 
@@ -25,6 +26,12 @@ func NewPostgresd() (*Postgresd, error) {
 	return &Postgresd{
 		conn: db,
 	}, err
+}
+
+func (d *Postgresd) CreatedTable() {
+	if err := d.conn.AutoMigrate(&model.LostItem{}); err != nil {
+		log.Fatalf("Database create table failed")
+	}
 }
 
 func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {

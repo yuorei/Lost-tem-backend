@@ -20,6 +20,9 @@ func (h Handler) Init() {
 	if h.db, err = postgresd.NewPostgresd(); err != nil {
 		log.Fatalf("Database connection failed")
 	}
+
+	h.db.CreatedTable()
+
 }
 
 func (h Handler) Search(c *gin.Context) {
