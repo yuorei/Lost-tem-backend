@@ -1,7 +1,6 @@
 package postgresd
 
 import (
-	"fmt"
 	"log"
 	"lost-item/model"
 	"os"
