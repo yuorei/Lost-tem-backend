@@ -5,8 +5,6 @@ import (
 	"lost-item/database"
 	"strings"
 
-	"fmt"
-
 	"lost-item/model"
 	"os"
 
@@ -67,19 +65,23 @@ func (d *Postgresd) CreateTable() {
 }
 
 func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Location, query string, tags []string) (model.SearchResult, error) {
-	query_string := "Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?"
+	db := d.conn.Where("Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?", left_upper.Lat, right_bottom.Lat, right_bottom.Lng, left_upper.Lng)
 	if query != "" {
-		query_string = fmt.Sprintf("%s AND Comment LIKE %%%s%%", query_string, query)
+		db = d.conn.Where("Comment LIKE \"%%?%%\"", query)
 	}
 	for _, tag := range tags {
-		query_string = fmt.Sprintf("%s AND Kinds LIKE %%%s%%", query_string, tag)
+		db = d.conn.Where("Kinds LIKE \"%%?%%\"", tag)
 	}
 
 	items := make([]database.LostItem, d.limit)
-	err := d.conn.Where(
-		query_string,
-		left_upper.Lat, right_bottom.Lat, right_bottom.Lng, left_upper.Lng,
-	).Limit(int(d.limit)).Find(&items).Error
+	db = db.Limit(int(d.limit))
+	if db.RowsAffected == 0 {
+		return model.SearchResult{
+			Count: 0,
+			Items: []model.LostItem{},
+		}, nil
+	}
+	err := db.Find(&items).Error
 
 	if err != nil {
 		return model.SearchResult{}, err
