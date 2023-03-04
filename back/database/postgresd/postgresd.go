@@ -18,6 +18,29 @@ type Postgresd struct {
 	limit uint
 }
 
+func toModelLostItem(item database.LostItem) model.LostItem {
+	return model.LostItem{
+		ID:       item.ID,
+		Kinds:    item.Kinds,
+		Comment:  *item.Comment,
+		ImageURL: item.ImageURL,
+		Location: model.Location{
+			Lat: item.Lat,
+			Lng: item.Lng,
+		},
+		FindTime: item.FindTime,
+	}
+}
+
+func mapToModelLostItem(items []database.LostItem) []model.LostItem {
+	mapped_items := make([]model.LostItem, len(items))
+	for idx, item := range items {
+		mapped_items[idx] = toModelLostItem(item)
+	}
+
+	return mapped_items
+}
+
 func NewPostgresd() (*Postgresd, error) {
 	POSTGRES_HOST := os.Getenv("POSTGRES_HOST")
 	POSTGRES_USER := os.Getenv("POSTGRES_USER")
@@ -43,7 +66,7 @@ func (d *Postgresd) CreateTable() {
 }
 
 func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {
-	items := make([]model.LostItem, d.limit)
+	items := make([]database.LostItem, d.limit)
 	err := d.conn.Where("Kinds LIKE", fmt.Sprintf("%%%s%%", query)).Limit(int(d.limit)).Find(&items).Error
 
 	if err != nil {
@@ -52,13 +75,13 @@ func (d *Postgresd) SearchItemsFor(query string) (model.SearchResult, error) {
 
 	return model.SearchResult{
 		Count: uint(len(items)),
-		Items: items,
+		Items: mapToModelLostItem(items),
 	}, nil
 }
 
 func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom model.Location) (model.SearchResult, error) {
-	items := make([]model.LostItem, d.limit)
-	err := d.conn.Preload("Location").Where(
+	items := make([]database.LostItem, d.limit)
+	err := d.conn.Where(
 		"Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?",
 		left_upper.Lat, right_bottom.Lat, right_bottom.Lng, left_upper.Lng,
 	).Limit(int(d.limit)).Find(&items).Error
@@ -69,7 +92,7 @@ func (d *Postgresd) SearchItemsArea(left_upper model.Location, right_bottom mode
 
 	return model.SearchResult{
 		Count: uint(len(items)),
-		Items: items,
+		Items: mapToModelLostItem(items),
 	}, nil
 }
 
@@ -86,17 +109,12 @@ func (d *Postgresd) ItemDetail(id uint64) (model.LostItem, error) {
 		return model.LostItem{}, err
 	}
 
-	return model.LostItem{
-		ID:       item.ID,
-		Kinds:    item.Kinds,
-		Comment:  *item.Comment,
-		ImageURL: item.ImageURL,
-		Location: model.Location{
-			Lat: item.Lat,
-			Lng: item.Lng,
-		},
-		FindTime: item.FindTime,
-	}, nil
+	return toModelLostItem(item), nil
+}
+
+func (d *Postgresd) CompleteItem(id uint64) error {
+	err := d.conn.Where("id = ?", id).Delete(&database.LostItem{}).Error
+	return err
 }
 
 func (d *Postgresd) InsertItem(item model.LostItem) error {

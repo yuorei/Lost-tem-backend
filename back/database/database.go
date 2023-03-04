@@ -8,4 +8,5 @@ type DBConn interface {
 	SearchItemsArea(model.Location, model.Location) (model.SearchResult, error)
 	ItemDetail(uint64) (model.LostItem, error)
 	InsertItem(model.LostItem) error
+	CompleteItem(uint64) error
 }
