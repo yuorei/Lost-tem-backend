@@ -78,8 +78,9 @@ func (h Handler) ItemDetail(c *gin.Context) {
 func (h Handler) RegisterItem(c *gin.Context) {
 	var register_item model.LostItem
 
-	err := c.Bind(&register_item)
+	err := c.BindJSON(&register_item)
 	if err != nil {
+		log.Println("バインドに失敗しました")
 		c.Status(http.StatusBadRequest)
 		return
 	}

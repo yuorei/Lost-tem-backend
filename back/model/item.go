@@ -1,16 +1,12 @@
 package model
 
-import (
-	"time"
-)
-
 type LostItem struct {
-	ID           uint      `json:"id"`
-	Kinds        string    `json:"tags"`
-	Comment      string    `json:"note"`
-	ImageURL     string    `json:"pic"`
-	Location     Location  `json:"location"`
-	FindTime     time.Time `json:"date"`
+	ID       uint     `json:"id"`
+	Kinds    []string `json:"tags"`
+	Comment  string   `json:"note"`
+	ImageURL string   `json:"pic"`
+	Location Location `json:"location"`
+	FindTime string   `json:"date"`
 }
 
 type Location struct {

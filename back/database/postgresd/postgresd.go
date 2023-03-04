@@ -3,6 +3,7 @@ package postgresd
 import (
 	"log"
 	"lost-item/database"
+	"strings"
 
 	"fmt"
 
@@ -21,7 +22,7 @@ type Postgresd struct {
 func toModelLostItem(item database.LostItem) model.LostItem {
 	return model.LostItem{
 		ID:       item.ID,
-		Kinds:    item.Kinds,
+		Kinds:    strings.Split(item.Kinds, ","),
 		Comment:  item.Comment,
 		ImageURL: item.ImageURL,
 		Location: model.Location{
@@ -114,7 +115,7 @@ func (d *Postgresd) CompleteItem(id uint64) error {
 func (d *Postgresd) InsertItem(item model.LostItem) error {
 	item_db := database.LostItem{
 		Model:    gorm.Model{ID: item.ID},
-		Kinds:    item.Kinds,
+		Kinds:    strings.Join(item.Kinds, ","),
 		Comment:  item.Comment,
 		ImageURL: item.ImageURL,
 		Lat:      item.Location.Lat,
