@@ -76,6 +76,13 @@ func (h Handler) ItemDetail(c *gin.Context) {
 		return
 	}
 
+	for _, v := range item_detail.Kinds {
+		if 0 == len(v) {
+			item_detail.Kinds = make([]string, 0)
+		}
+		break
+	}
+
 	c.JSON(http.StatusOK, item_detail)
 }
 
