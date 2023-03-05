@@ -108,8 +108,7 @@ func (h Handler) DeleteItem(c *gin.Context) {
 	}
 	h.db.CompleteItem(id)
 
-	delete_item, _ := h.db.ItemDetail(id)
-	c.JSON(http.StatusOK, delete_item)
+	c.Status(http.StatusOK)
 }
 
 func (h Handler) Parse(c *gin.Context) {
