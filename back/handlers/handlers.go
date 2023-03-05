@@ -38,8 +38,8 @@ func (h *Handler) Init() {
 
 func (h Handler) Search(c *gin.Context) {
 	var request struct {
-		Location1 model.Location `json:"location1"`
-		Location2 model.Location `json:"location2"`
+		Location1 model.Location `json:"location1" binding:"required"`
+		Location2 model.Location `json:"location2" binding:"required"`
 
 		Query string   `json:"query"`
 		Tags  []string `json:"tags"`
