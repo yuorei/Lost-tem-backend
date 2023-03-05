@@ -59,13 +59,9 @@ func (h Handler) Search(c *gin.Context) {
 	}
 
 	for _, v := range search_result.Items {
-		for i, kind := range v.Kinds {
-			if 0 == len(kind) {
-				search_result.Items[i].Kinds = make([]string, 0)
-			}
-			break
+		if 0 == len(v.Kinds[0]) {
+			search_result.Items[0].Kinds = make([]string, 0)
 		}
-		break
 	}
 
 	c.JSON(http.StatusOK, search_result)
@@ -86,11 +82,8 @@ func (h Handler) ItemDetail(c *gin.Context) {
 		return
 	}
 
-	for _, v := range item_detail.Kinds {
-		if 0 == len(v) {
-			item_detail.Kinds = make([]string, 0)
-		}
-		break
+	if 0 == len(item_detail.Kinds[0]) {
+		item_detail.Kinds = make([]string, 0)
 	}
 
 	c.JSON(http.StatusOK, item_detail)
