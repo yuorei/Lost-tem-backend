@@ -77,7 +77,20 @@ func (d *Postgresd) CreateTable() {
 }
 
 func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Location, query string, tags []string) (model.SearchResult, error) {
-	db := d.conn.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", right_bottom.Lat, left_upper.Lat, left_upper.Lng, right_bottom.Lng)
+	left := left_upper.Lng
+	right := right_bottom.Lng
+	upper := left_upper.Lat
+	bottom := right_bottom.Lat
+
+	swap := func(x, y float64) (float64, float64) { return y, x }
+	if left > right {
+		left, right = swap(left, right)
+	}
+	if bottom > upper {
+		bottom, upper = swap(bottom, upper)
+	}
+
+	db := d.conn.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", bottom, upper, left, right)
 	if query != "" {
 		db = d.conn.Where("Comment LIKE ?", "%"+query+"%")
 		db = d.conn.Where("Kinds LIKE ?", "%"+query+"%")
