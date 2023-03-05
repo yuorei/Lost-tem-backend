@@ -58,6 +58,12 @@ func (h Handler) Search(c *gin.Context) {
 		return
 	}
 
+	for _, v := range search_result.Items {
+		if "" == v.Kinds[0] {
+			search_result.Items[0].Kinds = make([]string, 0)
+		}
+	}
+
 	c.JSON(http.StatusOK, search_result)
 }
 
@@ -74,6 +80,10 @@ func (h Handler) ItemDetail(c *gin.Context) {
 		c.Status(http.StatusBadRequest)
 		log.Println(err)
 		return
+	}
+
+	if "" == item_detail.Kinds[0] {
+		item_detail.Kinds = make([]string, 0)
 	}
 
 	c.JSON(http.StatusOK, item_detail)
