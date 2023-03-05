@@ -59,7 +59,7 @@ func (h Handler) Search(c *gin.Context) {
 	}
 
 	for _, v := range search_result.Items {
-		if 0 == len(v.Kinds[0]) {
+		if "" == v.Kinds[0] {
 			search_result.Items[0].Kinds = make([]string, 0)
 		}
 	}
@@ -82,7 +82,7 @@ func (h Handler) ItemDetail(c *gin.Context) {
 		return
 	}
 
-	if 0 == len(item_detail.Kinds[0]) {
+	if "" == item_detail.Kinds[0] {
 		item_detail.Kinds = make([]string, 0)
 	}
 
