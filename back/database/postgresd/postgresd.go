@@ -77,12 +77,13 @@ func (d *Postgresd) CreateTable() {
 }
 
 func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Location, query string, tags []string) (model.SearchResult, error) {
-	db := d.conn.Where("Lat <= ? AND Lat >= ? AND Lng <= ? AND Lng >= ?", left_upper.Lat, right_bottom.Lat, right_bottom.Lng, left_upper.Lng)
+	db := d.conn.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", right_bottom.Lat, left_upper.Lat, left_upper.Lng, right_bottom.Lng)
 	if query != "" {
-		db = d.conn.Where("Comment LIKE \"%%?%%\"", query)
+		db = d.conn.Where("Comment LIKE ?", "%"+query+"%")
+		db = d.conn.Where("Kinds LIKE ?", "%"+query+"%")
 	}
 	for _, tag := range tags {
-		db = d.conn.Where("Kinds LIKE \"%%?%%\"", tag)
+		db = d.conn.Where("Kinds LIKE ?", "%"+tag+"%")
 	}
 
 	items := make([]database.LostItem, d.limit)
