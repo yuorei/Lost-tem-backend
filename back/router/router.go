@@ -3,11 +3,14 @@ package router
 import (
 	"lost-item/handlers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func Router() *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
+
 	h := handlers.Handler{}
 	h.Init()
 	r.POST("/search", h.Search)
