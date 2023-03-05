@@ -1,10 +1,17 @@
 package main
 
 import (
+	"log"
 	"lost-item/router"
+	"os"
 )
 
 func main() {
 	r := router.Router()
-	r.Run(":3000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("defaulting to port %s", port)
+	}
+	r.Run(":" + port)
 }
