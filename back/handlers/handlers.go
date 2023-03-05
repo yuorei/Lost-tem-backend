@@ -58,6 +58,16 @@ func (h Handler) Search(c *gin.Context) {
 		return
 	}
 
+	for _, v := range search_result.Items {
+		for i, kind := range v.Kinds {
+			if 0 == len(kind) {
+				search_result.Items[i].Kinds = make([]string, 0)
+			}
+			break
+		}
+		break
+	}
+
 	c.JSON(http.StatusOK, search_result)
 }
 
