@@ -161,7 +161,14 @@ func (h Handler) Parse(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-	img_info.Kinds = objects
+	// mapには重複したキーをセットできないことを利用して重複を取り除いている
+	m := make(map[string]bool)
+	for _, v := range objects {
+		if !m[v] {
+			m[v] = true
+			img_info.Kinds = append(img_info.Kinds, v)
+		}
+	}
 
 	c.JSON(http.StatusOK, img_info)
 }
