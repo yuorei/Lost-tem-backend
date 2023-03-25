@@ -94,6 +94,9 @@ func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Locatio
 	if query != "" {
 		db = d.conn.Where("Comment LIKE ?", "%"+query+"%")
 		db = d.conn.Where("Kinds LIKE ?", "%"+query+"%")
+		db = d.conn.Where("colour LIKE ?", "%"+query+"%")
+		db = d.conn.Where("situation LIKE ?", "%"+query+"%")
+		db = d.conn.Where("others LIKE ?", "%"+query+"%")
 	}
 	for _, tag := range tags {
 		db = d.conn.Where("Kinds LIKE ?", "%"+tag+"%")
