@@ -149,18 +149,27 @@ func (h Handler) Parse(c *gin.Context) {
 		return
 	}
 
-	objects, err := h.cloud.ObjectRecognition(filename)
-	if err != nil {
-		c.Status(http.StatusInternalServerError)
-		return
-	}
-
 	var img_info model.ImageInfo
 	if img_info.ImageURL, err = h.cloud.GetURL(filename); err != nil {
 		log.Println("URLを取得できませんでした")
 		c.Status(http.StatusInternalServerError)
 		return
 	}
+
+	objects, err := h.cloud.ObjectRecognition(filename)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	labels, err := h.cloud.LabelRecognition(filename)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	objects = append(objects, labels...)
+
 	// mapには重複したキーをセットできないことを利用して重複を取り除いている
 	m := make(map[string]bool)
 	for _, v := range objects {
