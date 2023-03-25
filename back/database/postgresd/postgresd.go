@@ -76,7 +76,7 @@ func (d *Postgresd) CreateTable() {
 	}
 }
 
-func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Location, query string, tags []string, colour string, situation string, others string) (model.SearchResult, error) {
+func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Location, query string, tags []string) (model.SearchResult, error) {
 	left := left_upper.Lng
 	right := right_bottom.Lng
 	upper := left_upper.Lat
@@ -94,18 +94,12 @@ func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Locatio
 	if query != "" {
 		db = d.conn.Where("Comment LIKE ?", "%"+query+"%")
 		db = d.conn.Where("Kinds LIKE ?", "%"+query+"%")
+		db = d.conn.Where("colour LIKE ?", "%"+query+"%")
+		db = d.conn.Where("situation LIKE ?", "%"+query+"%")
+		db = d.conn.Where("others LIKE ?", "%"+query+"%")
 	}
 	for _, tag := range tags {
 		db = d.conn.Where("Kinds LIKE ?", "%"+tag+"%")
-	}
-	if colour != "" {
-		db = d.conn.Where("colour LIKE ?", "%"+colour+"%")
-	}
-	if situation != "" {
-		db = d.conn.Where("situation LIKE ?", "%"+situation+"%")
-	}
-	if others != "" {
-		db = d.conn.Where("others LIKE ?", "%"+others+"%")
 	}
 
 	items := make([]database.LostItem, d.limit)

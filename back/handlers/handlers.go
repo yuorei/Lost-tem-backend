@@ -41,11 +41,8 @@ func (h Handler) Search(c *gin.Context) {
 		Location1 model.Location `json:"location1" binding:"required"`
 		Location2 model.Location `json:"location2" binding:"required"`
 
-		Query     string   `json:"query"`
-		Tags      []string `json:"tags"`
-		Colour    string   `json:"colour"`
-		Situation string   `json:"situation"`
-		Others    string   `json:"others"`
+		Query string   `json:"query"`
+		Tags  []string `json:"tags"`
 	}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -53,7 +50,7 @@ func (h Handler) Search(c *gin.Context) {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	search_result, err := h.db.Search(request.Location1, request.Location2, request.Query, request.Tags,request.Colour,request.Situation,request.Others)
+	search_result, err := h.db.Search(request.Location1, request.Location2, request.Query, request.Tags)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
