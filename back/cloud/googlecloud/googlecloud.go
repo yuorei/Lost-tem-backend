@@ -58,6 +58,22 @@ func (gc GCloud) ObjectRecognition(filename string) ([]string, error) {
 	return obj, nil
 }
 
+func (gc GCloud) LabelRecognition(filename string) ([]string, error) {
+	image := vision.NewImageFromURI(fmt.Sprintf("gs://lost-item/%s", filename))
+
+	labels, err := gc.vision_cli.DetectLabels(gc.ctx, image, nil, 30)
+	if err != nil {
+		return []string{}, err
+	}
+
+	labels_str := []string{}
+
+	for _, l := range labels {
+		labels_str = append(labels_str, l.Description)
+	}
+	return labels_str, nil
+}
+
 func (gc GCloud) GetURL(filename string) (string, error) {
 	return fmt.Sprintf("https://storage.googleapis.com/lost-item/%s", filename), nil
 }
