@@ -29,7 +29,11 @@ func toModelLostItem(item database.LostItem) model.LostItem {
 			Lat: item.Lat,
 			Lng: item.Lng,
 		},
-		FindTime: item.FindTime,
+		FindTime:  item.FindTime,
+		ItemName:  item.ItemName,
+		Colour:    item.Colour,
+		Situation: item.Situation,
+		Others:    item.Others,
 	}
 }
 
