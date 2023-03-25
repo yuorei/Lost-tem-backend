@@ -149,13 +149,17 @@ func (d *Postgresd) CompleteItem(id uint64) error {
 
 func (d *Postgresd) InsertItem(item model.LostItem) (model.LostItem, error) {
 	item_db := database.LostItem{
-		Model:    gorm.Model{ID: item.ID},
-		Kinds:    strings.Join(item.Kinds, ","),
-		Comment:  item.Comment,
-		ImageURL: item.ImageURL,
-		Lat:      item.Location.Lat,
-		Lng:      item.Location.Lng,
-		FindTime: item.FindTime,
+		Model:     gorm.Model{ID: item.ID},
+		Kinds:     strings.Join(item.Kinds, ","),
+		Comment:   item.Comment,
+		ImageURL:  item.ImageURL,
+		Lat:       item.Location.Lat,
+		Lng:       item.Location.Lng,
+		FindTime:  item.FindTime,
+		ItemName:  item.ItemName,
+		Colour:    item.Colour,
+		Situation: item.Situation,
+		Others:    item.Others,
 	}
 
 	if err := d.conn.Create(&item_db).Error; err != nil {
