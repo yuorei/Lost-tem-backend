@@ -101,7 +101,7 @@ func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Locatio
 		queries := strings.Fields(query)
 		db = d.conn
 		for _, q := range queries {
-			db = db.Where("column LIKE ? OR other LIKE ? OR Situation LIKE ? OR Kinds LIKE ?", q, q, q, q)
+			db = db.Where("column LIKE ? OR other LIKE ? OR Situation LIKE ? OR Kinds LIKE ?", "%"+q+"%", "%"+q+"%", "%"+q+"%", "%"+q+"%")
 		}
 	}
 
