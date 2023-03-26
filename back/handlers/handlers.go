@@ -181,3 +181,27 @@ func (h Handler) Parse(c *gin.Context) {
 
 	c.JSON(http.StatusOK, img_info)
 }
+
+func (h Handler) UpdateItem(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	var update_item model.UpdateLostItem
+
+	err = c.BindJSON(&update_item)
+	if err != nil {
+		log.Println("バインドに失敗しました")
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	updated_item, err := h.db.UpdateItem(id, update_item)
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	c.JSON(http.StatusOK, updated_item)
+}

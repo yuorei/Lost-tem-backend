@@ -168,3 +168,49 @@ func (d *Postgresd) InsertItem(item model.LostItem) (model.LostItem, error) {
 	item.ID = item_db.ID
 	return item, nil
 }
+
+func (d *Postgresd) UpdateItem(id uint64, item model.UpdateLostItem) (model.LostItem, error) {
+	var item_db database.LostItem
+	if err := d.conn.Where("id = ?", id).First(&item_db).Error; err != nil {
+		return model.LostItem{}, err
+	}
+
+	if len(item.Kinds) > 0 {
+		item_db.Kinds = strings.Join(item.Kinds, ",")
+	}
+
+	if item.Comment != "" {
+		item_db.Comment = item.Comment
+	}
+
+	if item.ItemName != "" {
+		item_db.ItemName = item.ItemName
+	}
+
+	if item.Colour != "" {
+		item_db.Colour = item.Colour
+	}
+
+	if item.Situation != "" {
+		item_db.Situation = item.Situation
+	}
+
+	if item.Others != "" {
+		item_db.Others = item.Others
+	}
+
+	if item.Location != nil {
+		item_db.Lat = item.Location.Lat
+		item_db.Lng = item.Location.Lng
+	}
+
+	if item.FindTime != nil {
+		item_db.FindTime = *item.FindTime
+	}
+
+	if err := d.conn.Save(&item_db).Error; err != nil {
+		return model.LostItem{}, err
+	}
+
+	return toModelLostItem(item_db), nil
+}
