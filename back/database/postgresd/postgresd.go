@@ -95,20 +95,18 @@ func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Locatio
 	}
 
 	var db *gorm.DB
-	if len(query) > 0 {
-		// queryが存在する場合
-		db = d.conn.Where("(")
-		for i, q := range query {
+	// queryが存在する場合
+	if query != "" {
+		// 空白分け
+		queries := strings.Fields(query)
+		db = d.conn
+		for _, q := range queries {
 			db = db.Where("column LIKE ? OR other LIKE ? OR Situation LIKE ? OR Kinds LIKE ?", q, q, q, q)
-			if i < len(query)-1 {
-				db = db.Where("AND ")
-			}
 		}
-		db = db.Where(")")
 	}
 
 	items := make([]database.LostItem, d.limit)
-	if len(query) > 0 {
+	if query != "" {
 		db = db.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", bottom, upper, left, right).Limit(int(d.limit)).Find(&items)
 	} else {
 		db = d.conn.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", bottom, upper, left, right).Limit(int(d.limit)).Find(&items)
