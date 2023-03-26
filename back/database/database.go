@@ -8,4 +8,5 @@ type DBConn interface {
 	ItemDetail(uint64) (model.LostItem, error)
 	InsertItem(model.LostItem) (model.LostItem, error)
 	CompleteItem(uint64) error
+	UpdateItem(uint64, model.UpdateLostItem) (model.LostItem, error)
 }

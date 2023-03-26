@@ -15,6 +15,17 @@ type LostItem struct {
 	Others    string    `json:"others"`
 }
 
+type UpdateLostItem struct {
+	Kinds     []string   `json:"tags"`
+	Comment   string     `json:"note"`
+	Location  *Location  `json:"location"`
+	FindTime  *time.Time `json:"date" time_format:"2006-01-02T15:04:05Z"`
+	ItemName  string     `json:"item_name"`
+	Colour    string     `json:"colour"`
+	Situation string     `json:"situation"`
+	Others    string     `json:"others"`
+}
+
 type Location struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
