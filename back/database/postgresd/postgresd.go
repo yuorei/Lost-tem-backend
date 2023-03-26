@@ -94,20 +94,25 @@ func (d *Postgresd) Search(left_upper model.Location, right_bottom model.Locatio
 		bottom, upper = swap(bottom, upper)
 	}
 
-	db := d.conn.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", bottom, upper, left, right)
-	if query != "" {
-		db = d.conn.Where("Comment LIKE ?", "%"+query+"%")
-		db = d.conn.Where("Kinds LIKE ?", "%"+query+"%")
-		db = d.conn.Where("colour LIKE ?", "%"+query+"%")
-		db = d.conn.Where("situation LIKE ?", "%"+query+"%")
-		db = d.conn.Where("others LIKE ?", "%"+query+"%")
-	}
-	for _, tag := range tags {
-		db = d.conn.Where("Kinds LIKE ?", "%"+tag+"%")
+	var db *gorm.DB
+	if len(query) > 0 {
+		// queryが存在する場合
+		db = d.conn.Where("(")
+		for i, q := range query {
+			db = db.Where("column LIKE ? OR other LIKE ? OR Situation LIKE ? OR Kinds LIKE ?", q, q, q, q)
+			if i < len(query)-1 {
+				db = db.Where("AND ")
+			}
+		}
+		db = db.Where(")")
 	}
 
 	items := make([]database.LostItem, d.limit)
-	db = db.Limit(int(d.limit)).Find(&items)
+	if len(query) > 0 {
+		db = db.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", bottom, upper, left, right).Limit(int(d.limit)).Find(&items)
+	} else {
+		db = d.conn.Where("? <= Lat AND Lat <= ? AND ? <= Lng AND Lng <= ?", bottom, upper, left, right).Limit(int(d.limit)).Find(&items)
+	}
 	if db.RowsAffected == 0 {
 		return model.SearchResult{
 			Count: 0,
