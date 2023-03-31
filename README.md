@@ -7,7 +7,7 @@ Please use from here
 
 ## Front
 Click here for [Otoshimono App Front](https://github.com/gpioblink/otoshimono-front)
-## Preferred language
+## Language
 The backend of this app was developed in Go.
 
 ## database
