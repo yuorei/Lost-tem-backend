@@ -1,45 +1,45 @@
-# おとしものアプリ (Lost-Item App)
-おとしものアプリは、落とし物を撮影するだけで世界の人に共有できるツールです。このアプリを使うことで、警察に届けるまでもない落とし物を見つけた場合、すぐに共有することができます。
+# Lost-Item App
+The Otoshimono app is a tool that allows you to share your lost items with people around the world simply by taking a picture of them. By using this app, if you find a lost item that does not need to be reported to the police, you can share it immediately.
 
-# アプリ
-[おとしものアプリ](https://otoshimono.gpio.biz/)
-こちらからご利用ください
+# Apps
+[Otoshimono App](https://otoshimono.gpio.biz/)
+Please use from here
 
-## フロント
-[おとしものアプリフロント](https://github.com/gpioblink/otoshimono-front)はこちらから
-## 使用言語
-このアプリのバックエンドはGoで開発されました。
+## Front
+Click here for [Otoshimono App Front](https://github.com/gpioblink/otoshimono-front)
+## Preferred language
+The backend of this app was developed in Go.
 
-## データベース
-PostgreSQLを採用しました
-Cloud SQLを使用しています
-## フレームワーク,ライブラリ
-以下のフレームワーク,ライブラリを使用しています。バージョン番号はgo.modに記載されています
+## database
+Adopted PostgreSQL
+I am using Cloud SQL
+## frameworks, libraries
+I am using the following frameworks and libraries. The version number is mentioned in go.mod
 
 ### gin
-GoのWebフレームワークです
-採用理由としてGitHubのスター数,ドキュメントの豊富さ開発メンバーが使用経験ある点から採用しました
+Go web framework
+It was adopted because of the number of stars on GitHub and the fact that the development members have experience using it.
 
 ### gorm
-GoのORMです
-採用理由としてGitHubのスター数,ドキュメントの豊富さを基準に採用しました
+ORM for Go
+The reason for adoption was the number of stars on GitHub and the abundance of documents.
 
-## 開発環境の再現
+## Reproduction of development environment
 ```
 git clone git@github.com:yuorei/lost-item-backend.git
 ```
-GitHubからクローンします
-開発環境にdockerを採用しました
+Clone from GitHub
+Adopted docker for the development environment
 ```
 docker compose up
 ```
-アプリのバックエンドがローカルで立ち上がります
+App backend is launched locally
 
-## デプロイ
-Cloud Runにデプロイしています
-### CI,CD
-GitHubでmainにmergeされると自動でCI,CDが入ります
-Cloud Runで設定を行いました
-- 継続的デプロイを編集をします
-- リポジトリとブランチを選択します
-- Cloud Run でシークレット,環境変数をセットしてください
+## Deploy
+Deploying to Cloud Run
+### CI, CD
+CI and CD are automatically entered when merged into main on GitHub
+I made the settings in Cloud Run
+- Edit Continuous Deployment
+- Select repository and branch
+- Set secrets and environment variables in Cloud Run
